@@ -8,5 +8,13 @@
 </ion-header>
 
 <ion-content>
-
-</ion-content>
+  <ion-card class="welcome-card" *ngFor="let movie of movies.results">
+    <ion-img src="https://image.tmdb.org/t/p/w500/{{movie.backdrop_path}}"></ion-img>
+    <ion-card-header>
+      <ion-card-subtitle>Popularidade {{movie.popularity}}</ion-card-subtitle>
+      <ion-card-title class=text-center>{{movie.title}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{movie.overview}}</p>
+    </ion-card-content>
+  </ion-card>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieService } from 'src/app/services/movie.service';
+import { LoadingController } from '@ionic/angular'
 
 @Component({
   selector: 'app-movies',
@@ -10,26 +11,35 @@ import { MovieService } from 'src/app/services/movie.service';
 export class MoviesPage implements OnInit {
 
   movies =  [];
-  
-  constructor(private mDBservice: MovieService) { }
+  private param:string = "top_rated"
+  constructor(private mDBservice: MovieService,private loadingController: LoadingController) { }
 
   ngOnInit() {
-    this.topRatedMovies()
+    this.consultaFilmes()
   }
 
-  topRatedMovies(){
-    this.mDBservice.getTopRatedMovies().subscribe(
+  async consultaFilmes(){
+    //loading
+    const loading = await this.loadingController.create({
+      message: 'Carregando Filmes...'
+    });
+
+    await loading.present();
+
+    await this.mDBservice.getMovies(this.param).subscribe(
       data=>{
         //pega a resposta
-        let resposta = (data as any)._body;
+         //let resposta = (data as any)._body;
         // converte obj para JSON
-        resposta = JSON.parse(resposta);
+         //resposta = JSON.parse(resposta);
         //console.log(resposta);
-        this.movies = resposta;
+        this.movies = data;
+        loading.dismiss();
       },
       error=>{
         console.log(error);
-      },
+        loading.dismiss();
+      }
     ).add();
   }
 

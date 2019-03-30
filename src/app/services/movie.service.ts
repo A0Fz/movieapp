@@ -19,7 +19,7 @@ export class MovieService {
   
   //função terá retorno do tipo observable
   getMovies(param:string):Observable<any> {
-    const url = `${this.URL_API}/movie/${param}?api_key=${this.API_KEY}`
+    const url = `${this.URL_API}/${param}api_key=${this.API_KEY}`
     return this.http.get<any>(url).pipe(
       tap(_ => console.log(`O parametro requisitado foi : ${param}`)),
       catchError(this.handleError<any>(`Falha no getMovies parametro = ${param}`))

@@ -11,29 +11,33 @@ import { LoadingController } from '@ionic/angular'
 export class MoviesPage implements OnInit {
 
   movies =  [];
-  private param:string = "top_rated";
+  private arrayCategory = ["upcoming", "top_rated", "popular", "now_playing"];
+  private movie_name:string;
   constructor(private mDBservice: MovieService,private loadingController: LoadingController) { }
 
   ngOnInit() {
     this.consultaFilmes()
   }
 
-  async consultaFilmes(){
+  async consultaFilmes(index?){
     //loading
     const loading = await this.loadingController.create({
       message: 'Carregando Filmes...'
     });
 
+    index = (typeof index === 'undefined') ? 3 : Math.floor(Math.random() * 4);
+    let param = (typeof this.movie_name === 'undefined') ? `movie/${this.arrayCategory[index]}?` : `search/movie?query=${this.movie_name}&include_adult=false&`;
+    //https://www.themoviedb.org/3/movie/upcoming?api_key=${this.API_KEY}&languagept-BR
     await loading.present();
 
-    await this.mDBservice.getMovies(this.param).subscribe(
+    await this.mDBservice.getMovies(param).subscribe(
       data=>{
         //pega a resposta
          //let resposta = (data as any)._body;
         // converte obj para JSON
          //resposta = JSON.parse(resposta);
         //console.log(resposta);
-        this.movies = data;
+        this.movies = data.results;
         loading.dismiss();
       },
       error=>{
@@ -42,9 +46,16 @@ export class MoviesPage implements OnInit {
       }
     ).add();
   }
+  doRefresh(event) {
+    this.consultaFilmes();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
+  }
+}
 
   //exibeMsg(id:string){
     //console.log(`O id do filme clicado é : ${id}`);
   //}
 
-}
+

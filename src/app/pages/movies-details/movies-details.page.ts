@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MovieService } from 'src/app/services/movie.service';
 import { LoadingController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RateService } from 'src/app/services/rate.service';
 
 @Component({
   selector: 'app-movies-details',
@@ -11,17 +12,34 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class MoviesDetailsPage implements OnInit {
 
   private movie ={};
+  private avaliacao = {
+    "id" : null,
+    "movie_id": this.route.snapshot.paramMap.get('id'),
+    "rating": null
+  };
 
   constructor(
     private mDBservice: MovieService,
     private loadingController: LoadingController,
     private route: ActivatedRoute,
-    private router: Router
+    private rate: RateService
     ) { }
 
   ngOnInit() {
     this.consultaFilme();
   }
+
+  async registraAvaliacao(){
+    await this.rate.addRate(this.avaliacao).subscribe(
+      result=>{
+        this.consultaFilme();
+      },
+      error=>{
+        console.log(error);
+      }
+    )
+  }
+
   async consultaFilme(){
     //loading
     const loading = await this.loadingController.create({
@@ -32,13 +50,9 @@ export class MoviesDetailsPage implements OnInit {
 
     //resgatar o id passado 'datails/:id'
 
-    await this.mDBservice.getMovies(this.route.snapshot.paramMap.get('id')).subscribe(
+    await this.mDBservice.getMovies(`movie/${this.route.snapshot.paramMap.get('id')}?`).subscribe(
       data=>{
-        //pega a resposta
-         //let resposta = (data as any)._body;
-        // converte obj para JSON
-         //resposta = JSON.parse(resposta);
-        //console.log(resposta);
+       
         this.movie = data;
         console.log(this.movie);
         loading.dismiss();

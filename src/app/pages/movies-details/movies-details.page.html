@@ -3,16 +3,28 @@
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
-      <ion-title>{{movie.belongs_to_collection.name}}</ion-title>
+      <ion-title>{{movie.title}}</ion-title>
     </ion-toolbar>
   </ion-header>
   
   <ion-content>
     <ion-card class="welcome-card">
-      <ion-img src="https://image.tmdb.org/t/p/w500/{{movie.backdrop_path}}"></ion-img>
+      <ion-img src="https://image.tmdb.org/t/p/w500/{{movie.poster_path}}"></ion-img>
       <ion-card-header>
         <ion-card-subtitle>Genero: <ion-note *ngFor='let g of movie.genres'>{{g.name}}</ion-note></ion-card-subtitle>
         <ion-card-title class="text-center">{{movie.title}}</ion-card-title>
+        <ion-item>
+          <ion-label>Avaliação</ion-label>
+          <ion-select placeholder="Selecione" (ionChange)="registraAvaliacao()"
+           [(ngModel)]="avaliacao.rating">
+            <ion-select-option value="0">0</ion-select-option>
+            <ion-select-option value="1">1</ion-select-option>
+            <ion-select-option value="2">2</ion-select-option>
+            <ion-select-option value="3">3</ion-select-option>
+            <ion-select-option value="4">4</ion-select-option>
+            <ion-select-option value="5">5</ion-select-option>
+          </ion-select>
+        </ion-item>
       </ion-card-header>
       <ion-card-content>
         <div *ngFor="let p of movie.production_companies">
@@ -23,3 +35,5 @@
       </ion-card-content>
     </ion-card>
   </ion-content>
+
+  

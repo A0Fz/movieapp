@@ -32,11 +32,7 @@ export class MoviesPage implements OnInit {
 
     await this.mDBservice.getMovies(param).subscribe(
       data=>{
-        //pega a resposta
-         //let resposta = (data as any)._body;
-        // converte obj para JSON
-         //resposta = JSON.parse(resposta);
-        //console.log(resposta);
+       
         this.movies = data.results;
         loading.dismiss();
       },
